@@ -34,5 +34,30 @@ class Authentication extends Base{
         }
     }
 
+    /**
+     * 签名验证, 成功后解密数据包获得明文
+     * @param $verifyMsgSignature
+     * @param $verifyTimestamp
+     * @param $verifyNonce
+     * @param $verifyEchostr
+     * @return void
+     */
+    public function getAuthCode($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $postData){
+
+        // 明文
+        $result = '';
+
+        // 验证签名, 并解密
+        $wxcpt = new WXBizMsgCrypt(TOKEN, ENCODING_AES_KEY, CORP_ID);
+        $errCode = $wxcpt->DecryptMsg($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $postData, $result);
+
+        if ($errCode == 0){
+            return $result;
+        }else{
+            print("ERR: " . $errCode . "\n\n");
+            return -1;
+        }
+    }
+
 
 }

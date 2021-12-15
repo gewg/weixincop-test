@@ -24,7 +24,10 @@ class AuthenticationController extends Base{
         $verifyEchostr = $request->query('echostr');
 
         // 获得验证组建
-        $echoStr = new Authentication($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $verifyEchostr);
+        $authentication = new Authentication();
+
+        // 获取解码后明文
+        $echoStr = $authentication -> verifyUrl($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $verifyEchostr);
 
         // 若验证不通过, echoStr会被赋值为-1
         // 验证成功则response明文
@@ -41,24 +44,37 @@ class AuthenticationController extends Base{
     public function getAuthCode(Request $request){
 
         // 获取url中的参数
-        $msg_signature = $request->query('msg_signature');
-        $timestamp = $request->query('timestamp');
-        $nonce = $request->query('nonce');
-        $echostr = $request->query('echostr');
+        $verifyMsgSignature = $request->query('msg_signature');
+        $verifyTimestamp = $request->query('timestamp');
+        $verifyNonce = $request->query('nonce');
+        $verifyEchostr = $request->query('echostr');
+        // 获取包体
+        $postData = $request->getContent();
 
-        // 返回给企业微信后台的明文
-        $res_echostr = "";
+        // 获得验证组建
+        $authentication = new Authentication();
+        // 获取解密后的明文，并转换成simplexml方便处理
+        $xml = simplexml_load_string($authentication->getAuthCode($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $postData));
 
-        // 验证并解密
-        $wxcpt = new WXBizMsgCrypt(TOKEN, ENCODING_AES_KEY, CORP_ID);
-        $errCode = $wxcpt->VerifyURL($msg_signature, $timestamp, $nonce, $echostr, $res_echostr);
+        //$xml = simplexml_load_string($request->getContent());
 
-        // 若验证成功, 则打印并返回
-        if ($errCode == 0) {
-            var_dump($res_echostr);
-            return $res_echostr;
-        } else {
-            print("ERR: " . $errCode . "\n\n");
+        // 获取suite id和auth code
+        $suiteId = '';
+        $authCode = '';
+        foreach($xml->children() as $value){
+            if ($value->getName() == 'SuiteId'){
+                $suiteId = $value;
+            }
+            else if($value->getName() == 'AuthCode'){
+                $authCode = $value->children();
+                break;
+            }
         }
+
+        // 用authCode获得企业永久授权码
+
+
+        // 企业微信后台规定回调url处理完要返回success
+        return 'success';
     }
 }
