@@ -17,10 +17,10 @@ $app->get('/login', 'OauthController@login');
 $app->get('/qr_login', 'OauthController@web_login');
 $app->get('/web_login', 'OauthController@webOauth');
 $app->post('/get_token', 'OauthController@getOauth');
-//验证url有效性
-$app->get('/suite/receive', 'OauthController@getUrlEffectiveness');
-//回调地址
-$app->post('/suite/receive', 'OauthController@getAuthentication');
+
+//代开发
+$app->get('/suite/receive', 'AuthenticationController@checkUrlVerification');
+$app->post('/suite/receive', 'AuthenticationController@getAuthCode');
 
 // test
 // $app->get('/test_test_test', 'OauthController@getTestTest');

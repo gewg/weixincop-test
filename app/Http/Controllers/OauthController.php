@@ -20,11 +20,6 @@ use App\Models\BranchCampus;
 use App\Models\Branch;
 use App\Models\WxWork;
 
-// 参数
-define("ENCODING_AES_KEY", "Z55OiJcdeFealHPHM3xdrncbVMqwGh5VxEk3GPwYmry");
-define("TOKEN", "qvULhYkh777DeLdjNrW2");
-define("CORP_ID", "ww1cf3388b933cfc25");
-
 class OauthController extends Base
 {
     /**
@@ -350,70 +345,4 @@ class OauthController extends Base
         //$url = "https://campus.sc-edu.com/repair/home.html?token={$token}&type=0&role=0&order_id=0";
         //return redirect($url);
     }
-
-    /**
-     * 处理企业微信向回调url推送的请求
-     * 回调url总共会被推送两种信息, 都需要处理:
-     * 1. 用户企业授权服务商提供的代开发模板时, 会向服务商设置的回调url发送授权成功通知
-     * 2.
-     *
-     * @param Request $request
-     */
-    public function getAuthentication(Request $request){
-
-        // 获取url中的参数
-        $msg_signature = $request->query('msg_signature');
-        $timestamp = $request->query('timestamp');
-        $nonce = $request->query('nonce');
-        $echostr = $request->query('echostr');
-
-        // 需要返回的明文
-        $sEchoStr = "";
-
-        // 验证url
-        $wxcpt = new WXBizMsgCrypt(TOKEN, ENCODING_AES_KEY, CORP_ID);
-        $errCode = $wxcpt->VerifyURL($msg_signature, $timestamp, $nonce, $echostr, $sEchoStr);
-        if ($errCode == 0) {
-            var_dump($sEchoStr);
-            //
-            // 验证URL成功，将sEchoStr返回
-            // HttpUtils.SetResponce($sEchoStr);
-        } else {
-            print("ERR: " . $errCode . "\n\n");
-        }
-    }
-
-    /**
-     * 在企业微信设置回调url时, 验证url有效性
-     */
-    public function getUrlEffectiveness(Request $request){
-
-        // 获取url中的参数
-        $msg_signature = $request->query('msg_signature');
-        $timestamp = $request->query('timestamp');
-        $nonce = $request->query('nonce');
-        $echostr = $request->query('echostr');
-
-        // 返回给企业微信后台的明文
-        $res_echostr = "";
-
-        // 验证并解密
-        $wxcpt = new WXBizMsgCrypt(TOKEN, ENCODING_AES_KEY, CORP_ID);
-        $errCode = $wxcpt->VerifyURL($msg_signature, $timestamp, $nonce, $echostr, $res_echostr);
-
-        // 若验证成功, 则打印并返回
-        if ($errCode == 0) {
-            var_dump($res_echostr);
-            return $res_echostr;
-        } else {
-            print("ERR: " . $errCode . "\n\n");
-        }
-    }
-
-//    /**
-//     * 测试url
-//     */
-//    public function getTestTest(Request $request){
-//        print("AAA");
-//    }
 }
