@@ -20,7 +20,7 @@ $app->post('/get_token', 'OauthController@getOauth');
 
 //代开发
 $app->get('/suite/receive', 'AuthenticationController@checkUrlVerification');
-$app->post('/suite/receive', 'AuthenticationController@getAuthCode');
+$app->post('/suite/receive', 'AuthenticationController@getAuthOrTicket');
 
 // test
 // $app->get('/test_test_test', 'OauthController@getTestTest');

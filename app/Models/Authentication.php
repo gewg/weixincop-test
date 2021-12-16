@@ -58,6 +58,4 @@ class Authentication extends Base{
             return -1;
         }
     }
-
-
 }
