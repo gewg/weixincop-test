@@ -15,6 +15,7 @@ class AuthenticationController extends Base{
      * 在企业设置回调url时, 企业微信后台验证url的可用性
      * GET Request
      * @param Request $request
+     * @return string 直接返回给微信后台的明文
      */
     public function checkUrlVerification(Request $request){
 
@@ -31,7 +32,7 @@ class AuthenticationController extends Base{
         $echoStr = $authentication -> verifyUrl($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $verifyEchostr);
 
         // 若验证不通过, echoStr会被赋值为-1
-        // 验证成功则response明文
+        // 验证成功则直接response明文给微信后台
         if ($echoStr != -1){
             return $echoStr;
         }
@@ -58,7 +59,7 @@ class AuthenticationController extends Base{
         // 获得验证组建
         $authentication = new Authentication();
         // 获取解密后的明文，并转换成simplexml方便处理
-        $xml = simplexml_load_string($authentication->getAuthCode($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $postData));
+        $xml = simplexml_load_string($authentication->decryptMsg($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $postData));
         //$xml = simplexml_load_string($request->getContent());
 
         // 获取suite_id和auth_code 或者 suite_ticket
@@ -66,10 +67,11 @@ class AuthenticationController extends Base{
         $authCode = '';
         $suiteTicket = '';
         foreach($xml->children() as $value){
-            // 获取临时授权码
+            // 获取suiteId
             if ($value->getName() == 'SuiteId'){
                 $suiteId = $value;
             }
+            // 获取临时授权码
             else if($value->getName() == 'AuthCode'){
                 $authCode = $value;
             }
@@ -82,8 +84,9 @@ class AuthenticationController extends Base{
         // 保存到数据库, 因为有两种可能发生的推送, 所以authCode或suiteTicket可能为空
         if ($authCode != ''){
             // Todo:保存authCode到数据库
+            // Todo:获取企业永久授权码, 并且在数据库中初始化信息
         }else{
-            // Todo:保存suiteTicket到数据库
+            // Todo:更新suiteTicket到数据库
         }
 
         // 企业微信后台规定回调url处理完要返回success
@@ -91,11 +94,61 @@ class AuthenticationController extends Base{
     }
 
     /**
-     *
-     * @param Request $request
+     * 在模板授权成功时，在数据库中初始化用户企业的信息
      * @return void
      */
-    private function getSuiteTicket(Request $request){
+    private function initialCorp(){
 
+    }
+
+    /**
+     * 获取suite access token
+     * @param Request $request
+     * @return array 自定义的返回结构体buildReturn
+     */
+    public function getSuiteAccessToken(): array
+    {
+
+        $authentication = new Authentication();
+        $suiteAccessToken = $authentication->getSuiteAccessToken();
+
+        if ($suiteAccessToken == ''){
+            return $this->buildReturn(env('RETURN_FAIL'), 'access_suite_token获取失败');
+        }
+        return $this->buildReturn(env('RETURN_SUCCESS'), 'access_suite_token获取成功', $suiteAccessToken);
+    }
+
+    /**
+     * 获取企业永久授权码
+     * @param Request $request
+     * @return array 自定义的返回结构体buildReturn
+     */
+    public function getSecret(): array
+    {
+
+        $authentication = new Authentication();
+        $secret = $authentication->getPermanentCode();
+
+        if ($secret == ''){
+            return $this->buildReturn(env('RETURN_FAIL'), 'access_suite_token获取失败');
+        }
+        return $this->buildReturn(env('RETURN_SUCCESS'), 'access_suite_token获取成功', $secret);
+    }
+
+    /**
+     * 获取企业的access token
+     * @return string access token
+     */
+    public function getAccessToken($corpId): string
+    {
+
+        // 获取suite access token包体
+        $authentication = new Authentication();
+        $accessToken = $authentication->getAccessToken();
+
+        if ($accessToken == ''){
+            return $this->buildReturn(env('RETURN_FAIL'), 'access_token获取失败');
+        }
+        return $this->buildReturn(env('RETURN_SUCCESS'), 'access_suite_token获取成功', $accessToken);
     }
 }
