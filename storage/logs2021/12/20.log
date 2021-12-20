@@ -270,3 +270,85 @@ array (
 array (
 )
 =======================================================================
+[ 2021-12-20 14:36:05 ]	POST	http://123.60.73.48/weixincop-test/public/suite/receive?msg_signature=073409ad8a560fb8bb95621a7bfaa92075b08056&nonce=1640574652&timestamp=1639982165
+array (
+  'msg_signature' => '073409ad8a560fb8bb95621a7bfaa92075b08056',
+  'timestamp' => '1639982165',
+  'nonce' => '1640574652',
+)
+=======================================================================
+[ 2021-12-20 14:36:05 ]	POST	http://123.60.73.48/weixincop-test/public/suite/receive?msg_signature=073409ad8a560fb8bb95621a7bfaa92075b08056&nonce=1640574652&timestamp=1639982165
+array (
+  'msg_signature' => '073409ad8a560fb8bb95621a7bfaa92075b08056',
+  'timestamp' => '1639982165',
+  'nonce' => '1640574652',
+)
+=======================================================================
+[ 2021-12-20 14:36:05 ]	POST	http://123.60.73.48/weixincop-test/public/suite/receive?msg_signature=073409ad8a560fb8bb95621a7bfaa92075b08056&nonce=1640574652&timestamp=1639982165
+array (
+  'msg_signature' => '073409ad8a560fb8bb95621a7bfaa92075b08056',
+  'timestamp' => '1639982165',
+  'nonce' => '1640574652',
+)
+=======================================================================
+[ 2021-12-20 14:37:07 ]	GET	http://123.60.73.48/weixincop-test/public/suite/receive
+array (
+)
+=======================================================================
+[ 2021-12-20 14:40:16 ]	POST	http://123.60.73.48/weixincop-test/public/suite/receive?echostr=P9nAzCzyDtyTWESHep1vC5X9xho%2FqYX3Zpb4yKa9SKld1DsH3Iyt3tP3zNdtp%2B4RPcs8TgAE7OaBO%2BFZXvnaqQ%3D%3D&msg_signature=5c45ff5e21c57e6ad56bac8758b79b1d9ac89fd3&nonce=263014780&timestamp=1409659589
+array (
+  'msg_signature' => '5c45ff5e21c57e6ad56bac8758b79b1d9ac89fd3',
+  'timestamp' => '1409659589',
+  'nonce' => '263014780',
+  'echostr' => 'P9nAzCzyDtyTWESHep1vC5X9xho/qYX3Zpb4yKa9SKld1DsH3Iyt3tP3zNdtp+4RPcs8TgAE7OaBO+FZXvnaqQ==',
+)
+=======================================================================
+[ 2021-12-20 14:45:50 ]	GET	http://123.60.73.48/weixincop-test/public/suite/receive
+array (
+)
+=======================================================================
+[ 2021-12-20 14:46:03 ]	GET	http://123.60.73.48/weixincop-test/public/suite/receive
+array (
+)
+=======================================================================
+[ 2021-12-20 14:46:52 ]	GET	http://123.60.73.48/weixincop-test/public/suite/receive?echostr=kKOi2sMTBN6p5h7h7o4qfziQZSSXPWwUjn93afQCxBJzs4BGKbI1MDd6waQn6x2jJmiOfw%2BOyeujnWvRt0nriQ%3D%3D&msg_signature=2475548c50909e1277de1d49ea31144f918f6bf1&nonce=03gfrr04zrbt&timestamp=1639982812
+array (
+  'msg_signature' => '2475548c50909e1277de1d49ea31144f918f6bf1',
+  'timestamp' => '1639982812',
+  'nonce' => '03gfrr04zrbt',
+  'echostr' => 'kKOi2sMTBN6p5h7h7o4qfziQZSSXPWwUjn93afQCxBJzs4BGKbI1MDd6waQn6x2jJmiOfw+OyeujnWvRt0nriQ==',
+)
+=======================================================================
+[ 2021-12-20 14:47:37 ]	POST	http://123.60.73.48/weixincop-test/public/suite/receive?msg_signature=5e7dad24d10adb6fca1cce2be77a958a210b15d3&nonce=1640355870&timestamp=1639982857
+array (
+  'msg_signature' => '5e7dad24d10adb6fca1cce2be77a958a210b15d3',
+  'timestamp' => '1639982857',
+  'nonce' => '1640355870',
+)
+=======================================================================
+[ 2021-12-20 14:47:37 ]	POST	http://123.60.73.48/weixincop-test/public/suite/receive?msg_signature=5e7dad24d10adb6fca1cce2be77a958a210b15d3&nonce=1640355870&timestamp=1639982857
+array (
+  'msg_signature' => '5e7dad24d10adb6fca1cce2be77a958a210b15d3',
+  'timestamp' => '1639982857',
+  'nonce' => '1640355870',
+)
+=======================================================================
+[ 2021-12-20 14:47:37 ]	POST	http://123.60.73.48/weixincop-test/public/suite/receive?msg_signature=5e7dad24d10adb6fca1cce2be77a958a210b15d3&nonce=1640355870&timestamp=1639982857
+array (
+  'msg_signature' => '5e7dad24d10adb6fca1cce2be77a958a210b15d3',
+  'timestamp' => '1639982857',
+  'nonce' => '1640355870',
+)
+=======================================================================
+[ 2021-12-20 14:52:53 ]	GET	http://123.60.73.48/weixincop-test/public/suite/receive?echostr=CQszzmgSFSlu0IFKw5Z2Ic2FN5bmt6AuIRxOzP1fROlCvrN%2FNrMtd7D0J0j6nModec9auI3JRj45xSqN7uCDoQ%3D%3D&msg_signature=c4b1e2eea35e0291e551d3afdb1db66a6548df4d&nonce=7l5z8rzgkfw&timestamp=1639983173
+array (
+  'msg_signature' => 'c4b1e2eea35e0291e551d3afdb1db66a6548df4d',
+  'timestamp' => '1639983173',
+  'nonce' => '7l5z8rzgkfw',
+  'echostr' => 'CQszzmgSFSlu0IFKw5Z2Ic2FN5bmt6AuIRxOzP1fROlCvrN/NrMtd7D0J0j6nModec9auI3JRj45xSqN7uCDoQ==',
+)
+=======================================================================
+[ 2021-12-20 14:54:05 ]	GET	http://123.60.73.48/weixincop-test/public/suite/receive
+array (
+)
+=======================================================================
