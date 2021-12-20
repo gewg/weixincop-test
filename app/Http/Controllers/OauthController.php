@@ -8,8 +8,6 @@
 
 namespace App\Http\Controllers;
 
-include_once "/vendor/callback/WXBizMsgCrypt.php";
-
 use App\Models\Base;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Http\Request;

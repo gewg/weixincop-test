@@ -66,7 +66,7 @@ class ApplicationTester
             $this->input->setInteractive($options['interactive']);
         }
 
-        $this->captureStreamsIndependently = array_key_exists('capture_stderr_separately', $options) && $options['capture_stderr_separately'];
+        $this->captureStreamsIndependently = \array_key_exists('capture_stderr_separately', $options) && $options['capture_stderr_separately'];
         if (!$this->captureStreamsIndependently) {
             $this->output = new StreamOutput(fopen('php://memory', 'w', false));
             if (isset($options['decorated'])) {
@@ -114,7 +114,7 @@ class ApplicationTester
         $display = stream_get_contents($this->output->getStream());
 
         if ($normalize) {
-            $display = str_replace(PHP_EOL, "\n", $display);
+            $display = str_replace(\PHP_EOL, "\n", $display);
         }
 
         return $display;
@@ -138,7 +138,7 @@ class ApplicationTester
         $display = stream_get_contents($this->output->getErrorOutput()->getStream());
 
         if ($normalize) {
-            $display = str_replace(PHP_EOL, "\n", $display);
+            $display = str_replace(\PHP_EOL, "\n", $display);
         }
 
         return $display;

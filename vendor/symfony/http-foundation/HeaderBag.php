@@ -112,7 +112,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
         $key = str_replace('_', '-', strtolower($key));
         $headers = $this->all();
 
-        if (!array_key_exists($key, $headers)) {
+        if (!\array_key_exists($key, $headers)) {
             if (null === $default) {
                 return $first ? null : [];
             }
@@ -121,7 +121,15 @@ class HeaderBag implements \IteratorAggregate, \Countable
         }
 
         if ($first) {
-            return \count($headers[$key]) ? $headers[$key][0] : $default;
+            if (!$headers[$key]) {
+                return $default;
+            }
+
+            if (null === $headers[$key][0]) {
+                return null;
+            }
+
+            return (string) $headers[$key][0];
         }
 
         return $headers[$key];
@@ -168,7 +176,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function has($key)
     {
-        return array_key_exists(str_replace('_', '-', strtolower($key)), $this->all());
+        return \array_key_exists(str_replace('_', '-', strtolower($key)), $this->all());
     }
 
     /**
@@ -216,8 +224,8 @@ class HeaderBag implements \IteratorAggregate, \Countable
             return $default;
         }
 
-        if (false === $date = \DateTime::createFromFormat(DATE_RFC2822, $value)) {
-            throw new \RuntimeException(sprintf('The %s HTTP header is not parseable (%s).', $key, $value));
+        if (false === $date = \DateTime::createFromFormat(\DATE_RFC2822, $value)) {
+            throw new \RuntimeException(sprintf('The "%s" HTTP header is not parseable (%s).', $key, $value));
         }
 
         return $date;
@@ -245,7 +253,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function hasCacheControlDirective($key)
     {
-        return array_key_exists($key, $this->cacheControl);
+        return \array_key_exists($key, $this->cacheControl);
     }
 
     /**
@@ -257,7 +265,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function getCacheControlDirective($key)
     {
-        return array_key_exists($key, $this->cacheControl) ? $this->cacheControl[$key] : null;
+        return \array_key_exists($key, $this->cacheControl) ? $this->cacheControl[$key] : null;
     }
 
     /**
@@ -321,7 +329,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
     protected function parseCacheControl($header)
     {
         $cacheControl = [];
-        preg_match_all('#([a-zA-Z][a-zA-Z_-]*)\s*(?:=(?:"([^"]*)"|([^ \t",;]*)))?#', $header, $matches, PREG_SET_ORDER);
+        preg_match_all('#([a-zA-Z][a-zA-Z_-]*)\s*(?:=(?:"([^"]*)"|([^ \t",;]*)))?#', $header, $matches, \PREG_SET_ORDER);
         foreach ($matches as $match) {
             $cacheControl[strtolower($match[1])] = isset($match[3]) ? $match[3] : (isset($match[2]) ? $match[2] : true);
         }

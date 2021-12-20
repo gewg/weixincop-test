@@ -62,9 +62,8 @@ class CommandTester
         }
 
         $this->input = new ArrayInput($input);
-        if ($this->inputs) {
-            $this->input->setStream(self::createStream($this->inputs));
-        }
+        // Use an in-memory input stream even if no inputs are set so that QuestionHelper::ask() does not rely on the blocking STDIN.
+        $this->input->setStream(self::createStream($this->inputs));
 
         if (isset($options['interactive'])) {
             $this->input->setInteractive($options['interactive']);
@@ -88,12 +87,16 @@ class CommandTester
      */
     public function getDisplay($normalize = false)
     {
+        if (null === $this->output) {
+            throw new \RuntimeException('Output not initialized, did you execute the command before requesting the display?');
+        }
+
         rewind($this->output->getStream());
 
         $display = stream_get_contents($this->output->getStream());
 
         if ($normalize) {
-            $display = str_replace(PHP_EOL, "\n", $display);
+            $display = str_replace(\PHP_EOL, "\n", $display);
         }
 
         return $display;
@@ -149,7 +152,7 @@ class CommandTester
         $stream = fopen('php://memory', 'r+', false);
 
         foreach ($inputs as $input) {
-            fwrite($stream, $input.PHP_EOL);
+            fwrite($stream, $input.\PHP_EOL);
         }
 
         rewind($stream);

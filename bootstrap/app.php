@@ -115,6 +115,6 @@ $app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
 $app->configure('database');
 $app->configure('session');
 
-error_reporting(501);
+//error_reporting(501);
 
 return $app;

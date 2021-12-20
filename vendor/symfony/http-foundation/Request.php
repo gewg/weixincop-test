@@ -97,49 +97,49 @@ class Request
     /**
      * Custom parameters.
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $attributes;
 
     /**
      * Request body parameters ($_POST).
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $request;
 
     /**
      * Query string parameters ($_GET).
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $query;
 
     /**
      * Server and execution environment parameters ($_SERVER).
      *
-     * @var \Symfony\Component\HttpFoundation\ServerBag
+     * @var ServerBag
      */
     public $server;
 
     /**
      * Uploaded files ($_FILES).
      *
-     * @var \Symfony\Component\HttpFoundation\FileBag
+     * @var FileBag
      */
     public $files;
 
     /**
      * Cookies ($_COOKIE).
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $cookies;
 
     /**
      * Headers (taken from the $_SERVER).
      *
-     * @var \Symfony\Component\HttpFoundation\HeaderBag
+     * @var HeaderBag
      */
     public $headers;
 
@@ -199,7 +199,7 @@ class Request
     protected $format;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @var SessionInterface
      */
     protected $session;
 
@@ -303,10 +303,10 @@ class Request
         // HTTP_CONTENT_TYPE and HTTP_CONTENT_LENGTH fields.
         $server = $_SERVER;
         if ('cli-server' === \PHP_SAPI) {
-            if (array_key_exists('HTTP_CONTENT_LENGTH', $_SERVER)) {
+            if (\array_key_exists('HTTP_CONTENT_LENGTH', $_SERVER)) {
                 $server['CONTENT_LENGTH'] = $_SERVER['HTTP_CONTENT_LENGTH'];
             }
-            if (array_key_exists('HTTP_CONTENT_TYPE', $_SERVER)) {
+            if (\array_key_exists('HTTP_CONTENT_TYPE', $_SERVER)) {
                 $server['CONTENT_TYPE'] = $_SERVER['HTTP_CONTENT_TYPE'];
             }
         }
@@ -528,7 +528,11 @@ class Request
         try {
             $content = $this->getContent();
         } catch (\LogicException $e) {
-            return trigger_error($e, E_USER_ERROR);
+            if (\PHP_VERSION_ID >= 70400) {
+                throw $e;
+            }
+
+            return trigger_error($e, \E_USER_ERROR);
         }
 
         $cookieHeader = '';
@@ -599,7 +603,7 @@ class Request
         self::$trustedProxies = $proxies;
 
         if (2 > \func_num_args()) {
-            @trigger_error(sprintf('The %s() method expects a bit field of Request::HEADER_* as second argument since Symfony 3.3. Defining it will be required in 4.0. ', __METHOD__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('The %s() method expects a bit field of Request::HEADER_* as second argument since Symfony 3.3. Defining it will be required in 4.0. ', __METHOD__), \E_USER_DEPRECATED);
 
             return;
         }
@@ -679,7 +683,7 @@ class Request
      */
     public static function setTrustedHeaderName($key, $value)
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the $trustedHeaderSet argument of the Request::setTrustedProxies() method instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the $trustedHeaderSet argument of the Request::setTrustedProxies() method instead.', __METHOD__), \E_USER_DEPRECATED);
 
         if ('forwarded' === $key) {
             $key = self::HEADER_FORWARDED;
@@ -691,7 +695,7 @@ class Request
             $key = self::HEADER_CLIENT_PROTO;
         } elseif ('client_port' === $key) {
             $key = self::HEADER_CLIENT_PORT;
-        } elseif (!array_key_exists($key, self::$trustedHeaders)) {
+        } elseif (!\array_key_exists($key, self::$trustedHeaders)) {
             throw new \InvalidArgumentException(sprintf('Unable to set the trusted header name for key "%s".', $key));
         }
 
@@ -719,10 +723,10 @@ class Request
     public static function getTrustedHeaderName($key)
     {
         if (2 > \func_num_args() || func_get_arg(1)) {
-            @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the Request::getTrustedHeaderSet() method instead.', __METHOD__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the Request::getTrustedHeaderSet() method instead.', __METHOD__), \E_USER_DEPRECATED);
         }
 
-        if (!array_key_exists($key, self::$trustedHeaders)) {
+        if (!\array_key_exists($key, self::$trustedHeaders)) {
             throw new \InvalidArgumentException(sprintf('Unable to get the trusted header name for key "%s".', $key));
         }
 
@@ -767,7 +771,7 @@ class Request
             $order[] = urldecode($keyValuePair[0]);
         }
 
-        array_multisort($order, SORT_ASC, $parts);
+        array_multisort($order, \SORT_ASC, $parts);
 
         return implode('&', $parts);
     }
@@ -915,7 +919,7 @@ class Request
      * @return string|null The client IP address
      *
      * @see getClientIps()
-     * @see http://en.wikipedia.org/wiki/X-Forwarded-For
+     * @see https://wikipedia.org/wiki/X-Forwarded-For
      */
     public function getClientIp()
     {
@@ -1037,8 +1041,8 @@ class Request
             $pos = strrpos($host, ':');
         }
 
-        if (false !== $pos) {
-            return (int) substr($host, $pos + 1);
+        if (false !== $pos && $port = substr($host, $pos + 1)) {
+            return (int) $port;
         }
 
         return 'https' === $this->getScheme() ? 443 : 80;
@@ -1204,7 +1208,7 @@ class Request
         // A reference to the same base directory or an empty subdirectory must be prefixed with "./".
         // This also applies to a segment with a colon character (e.g., "file:colon") that cannot be used
         // as the first segment of a relative-path reference, as it would be mistaken for a scheme name
-        // (see http://tools.ietf.org/html/rfc3986#section-4.2).
+        // (see https://tools.ietf.org/html/rfc3986#section-4.2).
         return !isset($path[0]) || '/' === $path[0]
             || false !== ($colonPos = strpos($path, ':')) && ($colonPos < ($slashPos = strpos($path, '/')) || false === $slashPos)
             ? "./$path" : $path;
@@ -1346,22 +1350,37 @@ class Request
      */
     public function getMethod()
     {
-        if (null === $this->method) {
-            $this->method = strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
-
-            if ('POST' === $this->method) {
-                if ($method = $this->headers->get('X-HTTP-METHOD-OVERRIDE')) {
-                    $this->method = strtoupper($method);
-                } elseif (self::$httpMethodParameterOverride) {
-                    $method = $this->request->get('_method', $this->query->get('_method', 'POST'));
-                    if (\is_string($method)) {
-                        $this->method = strtoupper($method);
-                    }
-                }
-            }
+        if (null !== $this->method) {
+            return $this->method;
         }
 
-        return $this->method;
+        $this->method = strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
+
+        if ('POST' !== $this->method) {
+            return $this->method;
+        }
+
+        $method = $this->headers->get('X-HTTP-METHOD-OVERRIDE');
+
+        if (!$method && self::$httpMethodParameterOverride) {
+            $method = $this->request->get('_method', $this->query->get('_method', 'POST'));
+        }
+
+        if (!\is_string($method)) {
+            return $this->method;
+        }
+
+        $method = strtoupper($method);
+
+        if (\in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'PATCH', 'PURGE', 'TRACE'], true)) {
+            return $this->method = $method;
+        }
+
+        if (!preg_match('/^[A-Z]++$/D', $method)) {
+            throw new SuspiciousOperationException(sprintf('Invalid method override "%s".', $method));
+        }
+
+        return $this->method = $method;
     }
 
     /**
@@ -1434,6 +1453,8 @@ class Request
                 return $format;
             }
         }
+
+        return null;
     }
 
     /**
@@ -1462,7 +1483,7 @@ class Request
      *
      * @param string|null $default The default format
      *
-     * @return string The request format
+     * @return string|null The request format
      */
     public function getRequestFormat($default = 'html')
     {
@@ -1563,7 +1584,7 @@ class Request
         if (!\func_num_args() || func_get_arg(0)) {
             // This deprecation should be turned into a BadMethodCallException in 4.0 (without adding the argument in the signature)
             // then setting $andCacheable to false should be deprecated in 4.1
-            @trigger_error('Checking only for cacheable HTTP methods with Symfony\Component\HttpFoundation\Request::isMethodSafe() is deprecated since Symfony 3.2 and will throw an exception in 4.0. Disable checking only for cacheable methods by calling the method with `false` as first argument or use the Request::isMethodCacheable() instead.', E_USER_DEPRECATED);
+            @trigger_error('Checking only for cacheable HTTP methods with Symfony\Component\HttpFoundation\Request::isMethodSafe() is deprecated since Symfony 3.2 and will throw an exception in 4.0. Disable checking only for cacheable methods by calling the method with `false` as first argument or use the Request::isMethodCacheable() instead.', \E_USER_DEPRECATED);
 
             return \in_array($this->getMethod(), ['GET', 'HEAD']);
         }
@@ -1674,7 +1695,7 @@ class Request
      */
     public function getETags()
     {
-        return preg_split('/\s*,\s*/', $this->headers->get('if_none_match'), null, PREG_SPLIT_NO_EMPTY);
+        return preg_split('/\s*,\s*/', $this->headers->get('if_none_match'), null, \PREG_SPLIT_NO_EMPTY);
     }
 
     /**
@@ -1808,7 +1829,7 @@ class Request
      * It works if your JavaScript library sets an X-Requested-With HTTP header.
      * It is known to work with common JavaScript frameworks:
      *
-     * @see http://en.wikipedia.org/wiki/List_of_Ajax_frameworks#JavaScript
+     * @see https://wikipedia.org/wiki/List_of_Ajax_frameworks#JavaScript
      *
      * @return bool true if the request is an XMLHttpRequest, false otherwise
      */
@@ -1820,9 +1841,9 @@ class Request
     /*
      * The following methods are derived from code of the Zend Framework (1.10dev - 2010-01-24)
      *
-     * Code subject to the new BSD license (http://framework.zend.com/license/new-bsd).
+     * Code subject to the new BSD license (https://framework.zend.com/license).
      *
-     * Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+     * Copyright (c) 2005-2010 Zend Technologies USA Inc. (https://www.zend.com/)
      */
 
     protected function prepareRequestUri()
@@ -2035,7 +2056,7 @@ class Request
         }
     }
 
-    /*
+    /**
      * Returns the prefix as encoded in the string when the string starts with
      * the given prefix, false otherwise.
      *
@@ -2154,7 +2175,7 @@ class Request
                 $clientIps[$key] = $clientIp = substr($clientIp, 1, $i - 1);
             }
 
-            if (!filter_var($clientIp, FILTER_VALIDATE_IP)) {
+            if (!filter_var($clientIp, \FILTER_VALIDATE_IP)) {
                 unset($clientIps[$key]);
 
                 continue;

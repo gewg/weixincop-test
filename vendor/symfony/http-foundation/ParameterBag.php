@@ -81,7 +81,7 @@ class ParameterBag implements \IteratorAggregate, \Countable
      */
     public function get($key, $default = null)
     {
-        return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
+        return \array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
     }
 
     /**
@@ -104,7 +104,7 @@ class ParameterBag implements \IteratorAggregate, \Countable
      */
     public function has($key)
     {
-        return array_key_exists($key, $this->parameters);
+        return \array_key_exists($key, $this->parameters);
     }
 
     /**
@@ -154,7 +154,7 @@ class ParameterBag implements \IteratorAggregate, \Countable
     public function getDigits($key, $default = '')
     {
         // we need to remove - and + because they're allowed in the filter
-        return str_replace(['-', '+'], '', $this->filter($key, $default, FILTER_SANITIZE_NUMBER_INT));
+        return str_replace(['-', '+'], '', $this->filter($key, $default, \FILTER_SANITIZE_NUMBER_INT));
     }
 
     /**
@@ -180,7 +180,7 @@ class ParameterBag implements \IteratorAggregate, \Countable
      */
     public function getBoolean($key, $default = false)
     {
-        return $this->filter($key, $default, FILTER_VALIDATE_BOOLEAN);
+        return $this->filter($key, $default, \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -191,11 +191,11 @@ class ParameterBag implements \IteratorAggregate, \Countable
      * @param int    $filter  FILTER_* constant
      * @param mixed  $options Filter options
      *
-     * @see http://php.net/manual/en/function.filter-var.php
+     * @see https://php.net/filter-var
      *
      * @return mixed
      */
-    public function filter($key, $default = null, $filter = FILTER_DEFAULT, $options = [])
+    public function filter($key, $default = null, $filter = \FILTER_DEFAULT, $options = [])
     {
         $value = $this->get($key, $default);
 
@@ -206,7 +206,7 @@ class ParameterBag implements \IteratorAggregate, \Countable
 
         // Add a convenience check for arrays.
         if (\is_array($value) && !isset($options['flags'])) {
-            $options['flags'] = FILTER_REQUIRE_ARRAY;
+            $options['flags'] = \FILTER_REQUIRE_ARRAY;
         }
 
         return filter_var($value, $filter, $options);

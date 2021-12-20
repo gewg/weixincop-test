@@ -24,7 +24,7 @@ class RequestLog
     {
         $url = $request->fullUrl();
         $method = $request->method();
-        $dir = '/opt/ci123/www/html/sc-edu/tmp/wx/qywx_third/visitor/' . date('Y/m');
+        $dir = '/var/www/localhost/htdocs/weixincop-test/storage/logs' . date('Y/m');
         $filename = $dir . '/' . date('d') . '.log';
         if (!is_dir($dir)) {
             mkdir($dir, 0775, true);

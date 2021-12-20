@@ -30,7 +30,7 @@ class AuthenticationController extends Base{
 
         // 获取解码后明文
         $echoStr = $authentication -> verifyUrl($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $verifyEchostr);
-
+        
         // 若验证不通过, echoStr会被赋值为-1
         // 验证成功则直接response明文给微信后台
         if ($echoStr != -1){
