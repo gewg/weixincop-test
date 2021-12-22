@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Models;
-require dirname(__FILE__).'./../../vendor/callback/WXBizMsgCrypt.php';
+require_once dirname(__FILE__).'./../../vendor/callback/WXBizMsgCrypt.php';
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\WXBizMsgCrypt;
 
 // 参数, 设置代开发模板时获取
 define("ENCODING_AES_KEY", "GosdFgeYEKCBqbXXGobVjZ2CC2qhNeAD5jfju34WKqK");
@@ -106,15 +107,15 @@ class Authentication extends Base{
         // 从数据库读取suite access token
         
 
-        // 如果数据库中的token存在且没有过期, 直接返回
+        // // 如果数据库中的token存在且没有过期, 直接返回
         // if (){
 
         // }
 
-        // 否则, 重新从微信后台获取
-        else{
-            $suiteAccessToken = $this->getNewSuiteAccessToken();
-        }
+        // // 否则, 重新从微信后台获取
+        // else{
+        //     $suiteAccessToken = $this->getNewSuiteAccessToken();
+        // }
 
         return $suiteAccessToken;
     }
@@ -129,8 +130,8 @@ class Authentication extends Base{
         $suite_access_token_url = 'cgi-bin/service/get_suite_token';
 
         // 从数据库读取参数
-        $suiteId = ; // suiteID从数据库中获取
-        $suiteSecret = ; // suiteSecret从数据库中获取
+        $suiteId = ''; // suiteID从数据库中获取
+        $suiteSecret = ''; // suiteSecret从数据库中获取
         $suiteTicket = $this->getSuiteTicket();
 
         // 抓取getSuiteAccessToken
@@ -170,11 +171,11 @@ class Authentication extends Base{
 
         $permanentCode = '';
 
-        // 检查数据库中是否保存
+        // // 检查数据库中是否存在 (企业永久授权)
         // if (){
 
         // }
-        // 否则, 获取一个新的
+        // // 否则, 向企业微信后台发送request获取一个新的
         // else{
         //     $permanentCode = $this->getNewPermanentCode();
         // }
@@ -189,7 +190,7 @@ class Authentication extends Base{
     private function getNewPermanentCode(): string
     {
 
-        $get_permanent_code = 'cgi-bin/service/get_permanent_code';
+        $get_permanent_code = '';
 
         // 获取suite access token
         $suiteAccessToken = $this->getSuiteAccessToken();
@@ -203,7 +204,7 @@ class Authentication extends Base{
             "auth_code" => $authCode
         );
 
-        // 转换格式
+        // 发送request得到resonse, 并转换格式
         $xml = simplexml_load_string($this->httpRequestJson($url, $postData));
 
         // 获取permanent_code
@@ -228,25 +229,25 @@ class Authentication extends Base{
     public function getAccessToken(){
 
         // 从数据库中读取读取数据库
-        $accessToken = ;
-        $accessTokenExpire = ;
+        $accessToken = '';
+        $accessTokenExpire = '';
 
-        // 如果access token存在数据库且未过期
-        if (){
+        // // 如果access token存在数据库且未过期
+        // if (){
 
 
-        }
+        // }
 
-        //  如果access token依旧为空, 则新建
-        if ($accessToken == ''){
+        // //  如果access token依旧为空, 则新建
+        // if ($accessToken == ''){
 
-            $accessTokenInfo = $this->getNewAccessToken();
-            $accessToken = $accessTokenInfo['access_token'];
-            $expiresIn = $accessTokenInfo['expires_in'] + time();
+        //     $accessTokenInfo = $this->getNewAccessToken();
+        //     $accessToken = $accessTokenInfo['access_token'];
+        //     $expiresIn = $accessTokenInfo['expires_in'] + time();
 
-            // 储存到数据库
-            //Todo:保存到数据库
-        }
+        //     // 储存到数据库
+        //     //Todo:保存到数据库
+        // }
 
         return $accessToken;
     }

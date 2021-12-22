@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-require dirname(__FILE__).'./../../../vendor/callback/WXBizMsgCrypt.php';
+require_once dirname(__FILE__).'./../../../vendor/callback/WXBizMsgCrypt.php';
 
 use App\Models\Base;
 use Illuminate\Database\ConnectionResolver;
