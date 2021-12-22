@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+require dirname(__FILE__).'./../../../vendor/callback/WXBizMsgCrypt.php';
 
 use App\Models\Base;
 use Illuminate\Database\ConnectionResolver;
@@ -8,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Routing\Controller;
 use App\Models\Authentication;
+use App\Models\WXBizMsgCrypt;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticationController extends Base{
 
@@ -52,17 +55,24 @@ class AuthenticationController extends Base{
         $verifyMsgSignature = $request->query('msg_signature');
         $verifyTimestamp = $request->query('timestamp');
         $verifyNonce = $request->query('nonce');
-        $verifyEchostr = $request->query('echostr');
+
         // 获取包体
         $postData = $request->getContent();
 
-        // 获得验证组建
+        // // 获得验证组建
         $authentication = new Authentication();
         // 获取解密后的明文，并转换成simplexml方便处理
-        $xml = simplexml_load_string($authentication->decryptMsg($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $postData));
-        //$xml = simplexml_load_string($request->getContent());
+        $decrypMsg = $authentication->decryptMsg($verifyMsgSignature, $verifyTimestamp, $verifyNonce, $postData);
+        
+        // 如果失败，返回fail
+        if ($decrypMsg == -1){
+            return 'fail';
+        }
 
-        // 获取suite_id和auth_code 或者 suite_ticket
+        // 如果解密成功，与数据库交互
+        $xml = simplexml_load_string($decrypMsg);
+
+        // 获取suite_id和auth_code 或者 suite_ticket, 因为有两种推送body, 所以有一者会为空
         $suiteId = '';
         $authCode = '';
         $suiteTicket = '';
@@ -86,7 +96,14 @@ class AuthenticationController extends Base{
             // Todo:保存authCode到数据库
             // Todo:获取企业永久授权码, 并且在数据库中初始化信息
         }else{
-            // Todo:更新suiteTicket到数据库
+            // 更新suiteTicket到数据库
+            $map = [
+                'suite_id' => $suiteId
+            ];
+            $insert = [
+                'suite_ticket' => $suiteTicket
+            ];
+            DB::table('suite_info')->updateOrInsert($map, $insert);
         }
 
         // 企业微信后台规定回调url处理完要返回success
@@ -99,6 +116,7 @@ class AuthenticationController extends Base{
      */
     private function initialCorp(){
 
+        // Todo：向repair_corp_id_info插入一条新的公司数据
     }
 
     /**

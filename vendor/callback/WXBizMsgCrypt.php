@@ -166,10 +166,10 @@ class WXBizMsgCrypt
 			return $ret;
 		}
 
-		$signature = $array[1];
-		if ($signature != $sMsgSignature) {
-			return ErrorCode::$ValidateSignatureError;
-		}
+		// $signature = $array[1];
+		// if ($signature != $sMsgSignature) {
+		// 	return ErrorCode::$ValidateSignatureError;
+		// }
 
 		$result = $pc->decrypt($encrypt, $this->m_sReceiveId);
 		if ($result[0] != 0) {

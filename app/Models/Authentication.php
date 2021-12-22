@@ -10,10 +10,15 @@ define("ENCODING_AES_KEY", "GosdFgeYEKCBqbXXGobVjZ2CC2qhNeAD5jfju34WKqK");
 define("TOKEN", "Z3h85t9XbYRdKpe2pc");
 define("CORP_ID", "ww1cf3388b933cfc25");
 
+// 测试用的数值
+// define("ENCODING_AES_KEY", "jWmYm7qr5nMoAUwZRjGtBxmz3KA1tkAj3ykkR6q2B2C");
+// define("TOKEN", "QDG6eK");
+// define("CORP_ID", "wx5823bf96d3bd56c7");
+
 class Authentication extends Base{
 
     /**
-     * 验证消息体签名的正确性
+     * 解密四个参数并返回解密后的明文
      * @param $verifyMsgSignature
      * @param $verifyTimestamp
      * @param $verifyNonce
@@ -49,7 +54,7 @@ class Authentication extends Base{
     {
 
         // 明文
-        $result = '';
+        $result = "";
 
         // 验证签名, 并解密
         $wxcpt = new WXBizMsgCrypt(TOKEN, ENCODING_AES_KEY, CORP_ID);
@@ -86,7 +91,6 @@ class Authentication extends Base{
         $suiteTicket = '';
 
         // 从数据库中读取suite ticket
-        //Todo:从数据库读取
 
         return $suiteTicket;
     }
@@ -100,14 +104,14 @@ class Authentication extends Base{
         $suiteAccessToken = '';
 
         // 从数据库读取suite access token
+        
 
+        // 如果数据库中的token存在且没有过期, 直接返回
+        // if (){
 
-        // 如果没有过期, 直接返回
-        if (){
+        // }
 
-        }
-
-        // 否则, 重新获取
+        // 否则, 重新从微信后台获取
         else{
             $suiteAccessToken = $this->getNewSuiteAccessToken();
         }
@@ -117,7 +121,7 @@ class Authentication extends Base{
 
     /**
      * 获取新的suite access token
-     * @return string 加密后的data数据
+     * @return string 
      */
     private function getNewSuiteAccessToken()
     {
@@ -125,8 +129,8 @@ class Authentication extends Base{
         $suite_access_token_url = 'cgi-bin/service/get_suite_token';
 
         // 从数据库读取参数
-        $suiteId = ; // 应用后台获取
-        $suiteSecret = ; // 应用后台获取
+        $suiteId = ; // suiteID从数据库中获取
+        $suiteSecret = ; // suiteSecret从数据库中获取
         $suiteTicket = $this->getSuiteTicket();
 
         // 抓取getSuiteAccessToken
@@ -154,7 +158,6 @@ class Authentication extends Base{
 
         // 保存到数据库
 
-
         return $suiteAccessToken;
     }
 
@@ -168,13 +171,13 @@ class Authentication extends Base{
         $permanentCode = '';
 
         // 检查数据库中是否保存
-        if (){
+        // if (){
 
-        }
+        // }
         // 否则, 获取一个新的
-        else{
-            $permanentCode = $this->getNewPermanentCode();
-        }
+        // else{
+        //     $permanentCode = $this->getNewPermanentCode();
+        // }
 
         return $permanentCode;
     }
@@ -224,18 +227,13 @@ class Authentication extends Base{
      */
     public function getAccessToken(){
 
-        $accessToken = '';
+        // 从数据库中读取读取数据库
+        $accessToken = ;
+        $accessTokenExpire = ;
 
-        // 读取数据库
-
-        // 检查access token的可用性
-        // 检查数据库中access token是否存在
+        // 如果access token存在数据库且未过期
         if (){
 
-            // 如果存在，检查有效期
-            if (){
-
-            }
 
         }
 

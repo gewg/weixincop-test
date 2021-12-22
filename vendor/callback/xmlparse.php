@@ -2,6 +2,7 @@
 namespace App\Models;
 
 include_once "errorCode.php";
+use DOMDocument;
 
 /**
  * XMLParse class

@@ -23,7 +23,8 @@ $app->get('/suite/receive', 'AuthenticationController@checkUrlVerification');
 $app->post('/suite/receive', 'AuthenticationController@getAuthOrTicket');
 
 // test
-// $app->get('/test_test_test', 'OauthController@getTestTest');
+$app->get('/test', 'TestController@getTest');
+$app->post('/test', 'TestController@postTest');
 
 //$app->get('/test', 'OauthController@test');
 

@@ -12,7 +12,7 @@ $gdbconf['scapp'] = [
     'host' => 'localhost',
     'dbname' => 'scapp',
     'username' => 'root',
-    'password' => 'toor1234'
+    'password' => ''
 ];
 
 return [
@@ -39,7 +39,7 @@ return [
             'port'      => 3306,
             'database'  => 'ecp',
             'username'  => 'root',
-            'password'  => 'root',
+            'password'  => '',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => 'ecp_',
